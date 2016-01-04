@@ -1,0 +1,14 @@
+[{
+  "id": "vaca",
+  "command": "vaca",
+  "caption": "vacation build"
+}
+// , {
+//   "id": "vaca",
+//   "command": "vaca",
+//   "caption": "vacation dev build",
+//   "args":{
+//     "type": "-ct"
+//   }
+// }
+]
