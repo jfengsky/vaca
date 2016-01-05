@@ -1,33 +1,7 @@
-import sublime, sublime_plugin, re
+import sublime, sublime_plugin, re, os
 
 class vacaCommand(sublime_plugin.TextCommand):
-
-  def getFolder(self, settings, filePath):
-    for key in settings:
-      pattern = re.compile(key)
-      match = pattern.search(filePath)
-      canBuild = False
-      buildFileName = ""
-      if match:
-        canBuild = True
-        buildFileName = settings[key]
-
-    if canBuild:
-      self.buildFile(buildFileName)
-    else:
-      sublime.message_dialog("找不到该文件的配置！")
-
-  # def getFileName(self, filePath):
-  #   # get file name
-  #   namePattern = re.compile(r'\w*.js$')
-  #   fileName = False
-  #   match = namePattern.search(filePath)
-  #   if match:
-  #     fileName = match.group()
-  #   return fileName
-
   def buildFile(self, fileName):
-    # build file
     args = {
       "cmd": [
         "vacation",
@@ -37,19 +11,56 @@ class vacaCommand(sublime_plugin.TextCommand):
         "-cto"
       ]
     }
-    args['path'] = "/usr/local/share/npm/bin:/usr/local/bin:/opt/local/bin"
+    if sublime.platform() == "windows":
+      args['cmd'][0] += ".cmd"
+    elif sublime.platform() == "osx":
+      args['path'] = "/usr/local/share/npm/bin:/usr/local/bin:/opt/local/bin"
     self.view.window().run_command('exec', args)
+    sublime.status_message("build......");
+
+  def buildMainFile(self,parentName,mainFileDict):
+    fileName = ''
+    canBuild = False
+    for key in mainFileDict:
+      if key == parentName:
+        fileName = mainFileDict[key]
+        canBuild = True
+
+    if canBuild:
+      self.buildFile(fileName)
+    else:
+      sublime.message_dialog("can't build, please setting first!")
+
+  def checkFile(self,fileName,parentName):
+    settings = sublime.load_settings('vaca.sublime-settings')
+    singleFileArray = settings.get("files")
+    mainFileDict = settings.get("folder")
+    if singleFileArray.count(fileName) >= 1:
+      self.buildFile(fileName)
+    else:
+      self.buildMainFile(parentName,mainFileDict)
 
   def run(self, edit):
     # self.view.insert(edit, 0, "444 ")
 
-    # get file path
-    filePath = self.view.file_name()
-    
-    # get setting
-    settings = sublime.load_settings('vaca.sublime-settings')
+    fullPath = self.view.file_name()
+    filePath = os.getcwd()
+    filePathSplit = os.path.split(filePath)
 
-    self.getFolder(settings.get("folder"), filePath)
+    fileName = os.path.basename(fullPath)
+
+    parentName = filePathSplit[1]
+
+    # get app or app-es6
+    grandName = os.path.split(filePathSplit[0])[1]
+
+    # check es6
+    if grandName == 'app':
+      self.checkFile(fileName,parentName)
+    else:
+      os.chdir('../../app/' + parentName)
+      self.checkFile(fileName,parentName)
+      sublime.message_dialog('app-es6')
 
 
     

@@ -1,12 +1,11 @@
 {
   "folder":{
-    "app/detail": "v_detail.js",
-    // "app-es6/detail": "v_detail.js",
-    "app/order": "pgk_book_fill_next.js",
-    "app/myctrip":"order_detail.js",
-    "app/options":"v_options_next.js",
-    "app/visa_detail":"visa_detail.js",
-    "app/circleline":"circleline.js"
+    "detail": "v_detail.js",
+    "order": "pgk_book_fill_next.js",
+    "myctrip":"order_detail.js",
+    "options":"v_options_next.js",
+    "visa_detail":"visa_detail.js",
+    "circleline":"circleline.js"
   },
   "files":["sync_detail_sightdialog.js"]
 }
