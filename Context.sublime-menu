@@ -1,14 +1,15 @@
 [{
   "id": "vaca",
   "command": "vaca",
-  "caption": "vacation build"
-}
-// , {
-//   "id": "vaca",
-//   "command": "vaca",
-//   "caption": "vacation dev build",
-//   "args":{
-//     "type": "-ct"
-//   }
-// }
-]
+  "caption": "vacation build",
+  "args":{
+    "buildType": 1
+  }
+}, {
+  "id": "vaca",
+  "command": "vaca",
+  "caption": "vacation dev build",
+  "args":{
+    "buildType": 2
+  }
+}]

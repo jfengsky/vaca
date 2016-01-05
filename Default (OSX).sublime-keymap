@@ -1,4 +1,7 @@
 [{
   "keys": ["alt+ctrl+l"],
-  "command": "vaca"
+  "command": "vaca",
+  "args":{
+    "buildType": 1
+  }
 }]

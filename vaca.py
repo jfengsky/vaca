@@ -1,14 +1,18 @@
 import sublime, sublime_plugin, re, os
 
 class vacaCommand(sublime_plugin.TextCommand):
-  def buildFile(self, fileName):
+  def buildFile(self, fileName,buildType):
+    bdArg = "-cto"
+    if buildType == 2:
+      bdArg = "-ct"
+
     args = {
       "cmd": [
         "vacation",
         "build",
         "-f",
         fileName,
-        "-cto"
+        bdArg
       ]
     }
     if sublime.platform() == "windows":
@@ -18,7 +22,7 @@ class vacaCommand(sublime_plugin.TextCommand):
     self.view.window().run_command('exec', args)
     sublime.status_message("build......");
 
-  def buildMainFile(self,parentName,mainFileDict):
+  def buildMainFile(self,parentName,mainFileDict,buildType):
     fileName = ''
     canBuild = False
     for key in mainFileDict:
@@ -27,20 +31,20 @@ class vacaCommand(sublime_plugin.TextCommand):
         canBuild = True
 
     if canBuild:
-      self.buildFile(fileName)
+      self.buildFile(fileName,buildType)
     else:
       sublime.message_dialog("can't build, please setting first!")
 
-  def checkFile(self,fileName,parentName):
+  def checkFile(self,fileName,parentName,buildType):
     settings = sublime.load_settings('vaca.sublime-settings')
     singleFileArray = settings.get("files")
     mainFileDict = settings.get("folder")
     if singleFileArray.count(fileName) >= 1:
-      self.buildFile(fileName)
+      self.buildFile(fileName,buildType)
     else:
-      self.buildMainFile(parentName,mainFileDict)
+      self.buildMainFile(parentName,mainFileDict,buildType)
 
-  def run(self, edit):
+  def run(self, edit, buildType):
     # self.view.insert(edit, 0, "444 ")
 
     fullPath = self.view.file_name()
@@ -56,11 +60,10 @@ class vacaCommand(sublime_plugin.TextCommand):
 
     # check es6
     if grandName == 'app':
-      self.checkFile(fileName,parentName)
+      self.checkFile(fileName,parentName,buildType)
     else:
       os.chdir('../../app/' + parentName)
-      self.checkFile(fileName,parentName)
-      sublime.message_dialog('app-es6')
+      self.checkFile(fileName,parentName,buildType)
 
 
     
